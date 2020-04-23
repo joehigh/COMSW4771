@@ -22,6 +22,7 @@
 \usepackage{eqnarray}
 %\usepackage{titlesec} 
 \usepackage{bm} 
+\usepackage{bbm}
 \usepackage{hyperref}
 \usepackage{flafter}
 \usepackage{graphicx}
@@ -34,6 +35,29 @@
 \newcommand\unif{\ensuremath{\operatorname{unif}}}
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 \newcommand{\1}[1]{\mathds{1}\left[#1\right]}
+
+
+\newcommand{\expect}{\operatorname{\mathbb{E}}\expectarg}
+\DeclarePairedDelimiterX{\expectarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\expectpi}{\operatorname{\mathbb{E}_{\pi}}\expectpiarg}
+\DeclarePairedDelimiterX{\expectpiarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\innermid}{\nonscript\;\delimsize\vert\nonscript\;}
+\newcommand{\activatebar}{%
+  \begingroup\lccode`\~=`\|
+  \lowercase{\endgroup\let~}\innermid 
+  \mathcode`|=\string"8000
+}
+
 
 \makeatletter
 \newcommand{\mybox}{%
@@ -52,25 +76,124 @@
 \begin{document}
 \maketitle
 
-\section*{Problem 1: Finding the value of a state under a policy}
+\section*{\large Problem 1: Finding the value of a state under a policy}
+
+\begin{proof}
+\text{}\\\ \\\
+First, using the law of total expectation and conditioning over $a \in \mathcal{A}$:
+\begin{align*} 
+v_{\pi}(s) &  = \ \expectpi{G_t  |  S_t = s } \ = \ \sum_{a} \expectpi*{  G_t   |   S_t = s, a_t = a }\cdot \underbrace{P\left(a_t = a | s_t = s\right)}_{ = \ \pi(a  |  s)} \\[0.5em]
+& = \ \sum_{a} \pi(a \ | \ s)\expectpi*{  G_t   |   S_t = s, a_t = a } \\
+\intertext{Again, using the law of total expectation, but now conditioning over $s'$:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'}\expectpi*{  G_t   |   S_t = s, a_t = a, S_{t+1} = s'} \cdot \underbrace{P\left(S_{t+1} = s' \ | \ S_t = s, a_t = a \right)}_{= \ P(s' | s, a)} \\[1em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  G_t   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Substituting in the definition of $G_t$:} 
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{\sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Pulling out the first summand, $R_{t+1}$, from the infinite series:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{R_{t+1} + \sum_{k=2}^{\infty} \gamma^{k-1}R_{t+k}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Re-indexing the infinite series and factoring out a $\gamma$ :}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{R_{t+1} + \gamma\sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k+1}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Using the linearity property of expectation:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  R_{t+1} + \gamma\expect*{ \sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k+1}}  |  S_t = s, a_t = a, S_{t+1} = s'}\\[1em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  R_{t+1} + \gamma G_{t+1}  |  S_t = s, a_t = a, S_{t+1} = s'}\\[1em]
+\intertext{Again, using the linearity property of expectation:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\bigg[\expectpi*{  R_{t+1} |  S_t = s, a_t = a, S_{t+1} = s'}  \\[-0.5em]
+&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \ \gamma\expectpi*{G_{t+1} | S_t = s, a_t = a, S_{t+1} = s'}\bigg] \\
+\intertext{By the Markov property, $\expectpi*{G_{t+1} | S_t = s, a_t = a, S_{t+1} = s'} =  \expectpi*{G_{t+1} | S_{t+1} = s'}$. Applying this to the above:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\bigg[\underbrace{\expectpi*{  R_{t+1} |  S_t = s, a_t = a, S_{t+1} = s'}}_{= \ R_a(s, s')}  \ + \ \gamma\underbrace{\expectpi*{G_{t+1} | S_{t+1} = s'}}_{= \ v_{\pi}(s')}\bigg] \\[0.5em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big] \\[0.5em]
+\end{align*}
+Hence, $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$
+\end{proof}
+%\clearpage
+%\paragraph{Alternative Proof for Problem 1.} 
+%\text{}
+%\\\ \\
+%The following proof is more brief than \textit{my} proof above, and is inspired by the Bellman equation proof provided in \textit{Reinforcement Learning: An Introduction}, by Sutton.
+%\begin{align*}
+%v_{\pi}(s) &  = \ \expectpi{G_t  |  S_t = s } \ = \ \expectpi*{  \mathbb{E}\left[ \sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k}  \right]   |   S_t = s } \\[1em]
+%& = \ \expectpi*{ \mathbb{E}\left[ R_{t+1} +  \gamma\sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k+1}  \right]  | S_t = s }\\[1em]
+%& = \ \expectpi*{R_{t+1} +  \gamma G_{t+1} | S_t = s}\\[1em] 
+%& = \ \expectpi*{R_{t+1} +  \gamma \expectpi{G_{t+1} | S_{t+1} = s'} | S_t = s}  && \text{(\emph{by law of total expectation})}\\[1em] 
+%& = \  \expectpi*{R_{t+1} +  \gamma v_{\pi}(s') | S_t = s}  \\[1em]  
+%& = \ \sum_{a} \pi(a \ | \ s) \sum_{s'} P\left(s' \ | \ s, a \right)\left[R_{a}(s, s') + \gamma v_{\pi}(s') \right] \\[1em]
+%& = \ \expectpi*{\sum_{s'} P\left(s' | s, a \right)\left[R_{t+1}  +  \gamma\sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k+1}  \right] | S_t = s  }  && \text{(\emph{by def. of expected value})}\\[1em]
+%& = \ 
+%\end{align*}
+
+\section*{\large Problem 2: Solving for a value function using linear algebra}
+
+In Problem 1 it was shown that $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$ 
+Applying the assumption that all transitions are deterministic, i.e., $P(s' \ | \ s, a) = \mathbbm{1}\{s' = next(s,a)\}$, we get $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} \mathbbm{1}\{s' = next(s,a)\}\cdot\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$ 
+That is, for each action $ a $, given the current state $s$, there is exactly one subsequent state. Thus, for each action $a$, the second summation reduces to a single term:
+\begin{align*}
+v_{\pi}(s) \ & = \ \sum_{a} \pi(a \ | \ s)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\\[0.6em]
+& = \ \sum_{a} \pi(a \ | \ s)R_a(s, s') \ + \ \gamma\sum_{a} \pi(a \ | \ s)v_{\pi}(s')\\[0.6em]
+& = \ \expectpi*{R_a(s, s') | S_t = s} \ + \ \gamma\expectpi{v_{\pi}(s') | S_t = s}\\
+\end{align*}
+Rearranging, we have
+\begin{align*}
+v_{\pi}(s) \ - \ \gamma\expectpi{v_{\pi}(s') | S_t = s} \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\Longrightarrow \ \ \ \ v_{\pi}(s) \ - \ \gamma \sum_{s'} P(s' | s)v_{\pi}(s')  \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\Longrightarrow \ \ \ \ v_{\pi}(s) \ - \ \gamma \sum_{s'} P(s' | s)v_{\pi}(s')  \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\intertext{where $P(s'|s)$ is the probability of transitioning from state $s$ to the subsequent state $s'$, and so $\sum_{s'}P(s' | s)$ is the sum of transition probabilities over all possible subsequent states.}
+\intertext{The above can be expressed as a system of linear equations, where each equation is the value function at a particular current state $s_i$. All possible subsequent states are denoted by $s_j$ (see below).}
+v_{\pi}(s_i) \ - \ \gamma \sum_{j=1}^n P(s_j | s_i)v_{\pi}(s_j)  \ & = \ \expectpi*{R_a(s, s') | S_t = s}
+\end{align*}
+In matrix form, this is
+\begin{align*}
+\begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix} \ -  \  \gamma\begin{bmatrix} p(s_1 | s_1) & \cdots & p(s_n | s_1) \\ \vdots & \ddots & \vdots \\ p(s_1 | s_n) & \cdots & p(s_n | s_n)  \end{bmatrix} \begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix} \ & = \ \begin{bmatrix} \expectpi*{R_a(s_1, s')} \\ \vdots \\ \expectpi*{R_a(s_n, s')} \end{bmatrix} 
+\end{align*}
+That is,  
+\begin{align*}
+\mathbf{v}_{\pi} \ - \ \gamma \mathbf{P} \mathbf{v}_{\pi} \ & = \ \mathbf{R}_{\pi}\\
+\Longrightarrow \ \ \ \ \ \ \left(\mathbf{I} - \gamma \mathbf{P}\right)\mathbf{v}_{\pi} \ & = \ \mathbf{R}_{\pi}
+\end{align*}
+where $\mathbf{R}_{\pi}$ denotes the vector of expected returns on the right-hand side of the expression above.
 
 
-\section*{Problem 2: Solving for a value function using linear algebra}
 
 
-\section*{Problem 3: Finding the value states ``in the real world"}
+%Now, applying this result for the current state $s_i$, for all $i$, and for each possible subsequent state $s_j$, $i, j \in \{1, \dots, n\}$, we get:
+%$$v_{\pi}(s_i) \ = \ \sum_{j=1}^n \pi(a_i \ | \ s_i)R_a(s_i, s_j) \ + \ \gamma\sum_{j=1}^n \pi(a_i \ | \ s_i)v_{\pi}(s_j)$$
+%
+%where $a_{ij}$ denotes the action that results in transitioning to state $s_j$ from state $s_i$. 
+%Putting this into matrix form:
+%$$\begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix}  = \begin{bmatrix} \pi(a_{11} | s_1) & \cdots & \pi(a_{1n} | s_1) \\ \vdots & \ddots & \vdots \\ \pi(a_{n1} | s_n) & \cdots & \pi(a_{nn} | s_n)  \end{bmatrix} \begin{bmatrix} R_1 \\ \vdots \\ R_n \end{bmatrix} \ + \ \gamma  \begin{bmatrix} \pi(a_{11} | s_1) & \cdots & \pi(a_{1n} | s_1) \\ \vdots & \ddots & \vdots \\ \pi(a_{n1} | s_n) & \cdots & \pi(a_{nn} | s_n)  \end{bmatrix} \begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix}$$
 
 
-\section*{Problem 4: Finding an optimal value function}
+\section*{\large Problem 3: Finding the value states ``in the real world"}
 
 
-\section*{Problem 5: Finding the optimal policy using iterative methods}
+\section*{\large Problem 4: Finding an optimal value function}
+
+\begin{enumerate}[(a)]
+\item  From problem 1, the value function can be written as $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$
+Because a policy governs the actions taken and the associated probabilities, maximizing $v_{\pi}(s)$ for a given state $s$, over all policies $\pi$, is tantamount to finding the action $a$ that achieves the maximum value (i.e., the immediate, expected and future rewards). Let $a^*$ denote such an action. Then, $a^* = \argmax_a\{v_{\pi}(s)\}$. For a given state $s$, an optimal policy will always distribute all of the weight to $a^*$. Then, because $\sum_{a} \pi(a \ | \ s) = 1$, for a given $s$, we have that for an optimal policy $\pi^*$: $$\pi^*(a \ | \ s)  = \begin{cases} 1 & \text{if } a = \mathlarger{\argmax_a\{v_{\pi}(s)\}} \\ 0 & \text{otherwise} \end{cases}$$
+Because the value function depends on the values of future states, the value at all future states $s'$ will necessarily be optimal.
+\begin{align*}
+v_*(s) \ & = \ \max_{\pi}\{v_{\pi}(s)\} \\
+& = \ \max_{\pi} \ \expectpi*{G_t | S_t = s} \\
+& = \ \max_{\pi} \left\lbrace \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\right\rbrace\\[1em]
+& = \ \max_{a} \left\lbrace \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\right\rbrace\\[1em]
+& = \ \max_{a} \left\lbrace \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\right\rbrace\\[1em]
+\end{align*}
+\joe{Need to include $v_*(s')$ in expression and argue it. Clean this proof up and include this.}
+
+\item 
 
 
-\section*{Problem 6: Find the optimal value function for gridworld}
+\item
+\end{enumerate}
+
+\section*{\large Problem 5: Finding the optimal policy using iterative methods}
 
 
-\section*{Problem 7: A model-free approach}
+
+\section*{\large Problem 6: Find the optimal value function for gridworld}
+
+
+\section*{\large Problem 7: A model-free approach}
 
 
 \section*{Extra Credit}
