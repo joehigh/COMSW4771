@@ -299,7 +299,6 @@ Therefore, the value function converges to the optimal value function as $t \lon
 
 \section*{\large Problem 6: Find the optimal value function for gridworld}
 
-The optimal value function was computed using the value iteration approach (see below). This optimal policy in this case is conceptually sound given that the greatest reward is in A.
 \begin{figure}[H]
 \centering
 \caption{Optimal Value Grid}
