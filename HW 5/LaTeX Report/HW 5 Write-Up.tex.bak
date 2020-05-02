@@ -1,0 +1,112 @@
+\documentclass[twoside,11pt]{homework}
+
+\coursename{COMS 4771 Machine Learning (Spring 2020)} 
+
+\studname{Joseph High}    % YOUR NAME GOES HERE
+\studmail{jph2185@columbia.edu}% YOUR UNI GOES HERE
+\hwNo{5}                   % THE HOMEWORK NUMBER GOES HERE
+\date{\today} % DATE GOES HERE
+
+% Uncomment the next line if you want to use \includegraphics.
+%\usepackage{graphicx}
+\usepackage{graphicx}
+%\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{relsize}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[makeroom]{cancel}
+\usepackage{collectbox}
+\usepackage{placeins}
+%\usepackage{cleveref}
+\usepackage{eqnarray}
+%\usepackage{titlesec} 
+\usepackage{bm} 
+\usepackage{bbm}
+\usepackage{hyperref}
+\usepackage{flafter}
+\usepackage{graphicx}
+\usepackage{float}
+%\titleformat{\subsubsection}[runin]
+%  {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\DeclarePairedDelimiter{\2norm}{\lVert}{\rVert^2_2}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand\unif{\ensuremath{\operatorname{unif}}}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\newcommand{\1}[1]{\mathds{1}\left[#1\right]}
+
+\DeclarePairedDelimiter{\infnorm}{\lVert}{\rVert_{\infty}}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+\newcommand{\expect}{\operatorname{\mathbb{E}}\expectarg}
+\DeclarePairedDelimiterX{\expectarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\expectpi}{\operatorname{\mathbb{E}_{\pi}}\expectpiarg}
+\DeclarePairedDelimiterX{\expectpiarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\innermid}{\nonscript\;\delimsize\vert\nonscript\;}
+\newcommand{\activatebar}{%
+  \begingroup\lccode`\~=`\|
+  \lowercase{\endgroup\let~}\innermid 
+  \mathcode`|=\string"8000
+}
+
+
+\makeatletter
+\newcommand{\mybox}{%
+    \collectbox{%
+        \setlength{\fboxsep}{1pt}%
+        \fbox{\BOXCONTENT}%
+    }%
+}
+
+
+%%%%%%%%%%%%%%%% Direct Comments %%%%%%%%%%%%%%%%
+\newcommand{\joe}[1]{\textcolor{yellow}{\colorbox{blue}{\parbox{15.5cm}{\textbf{\textsc{Joe}: \ #1}}}}}
+%newcommand{\joe}[1]{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\maketitle
+
+\section*{Problem 1: Improving the Confidence}
+
+\begin{proof}
+
+
+
+\end{proof}
+
+
+\section*{Problem 2: Non-linear Dimensionality Reduction}
+
+\begin{enumerate}[(i)]
+
+\item
+
+
+\item 
+
+
+\item 
+
+
+\item
+
+
+\end{enumerate}
+
+
+\end{document} 
