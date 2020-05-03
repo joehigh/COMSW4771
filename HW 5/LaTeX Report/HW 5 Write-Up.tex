@@ -36,14 +36,24 @@
 %\titleformat{\subsubsection}[runin]
 %  {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
 
+%Euclidean 2-norm:
 \DeclarePairedDelimiter{\2norm}{\lVert}{\rVert^2_2}
+
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand\unif{\ensuremath{\operatorname{unif}}}
+
+%Expected Value:
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 \newcommand{\1}[1]{\mathds{1}\left[#1\right]}
 
+% infinity norm:
 \DeclarePairedDelimiter{\infnorm}{\lVert}{\rVert_{\infty}}
+
+%Absolute Value:
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+% Regular Euclidean norm (no subscript or exponent):
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 
 \newcommand{\expect}{\operatorname{\mathbb{E}}\expectarg}
 \DeclarePairedDelimiterX{\expectarg}[1]{[}{]}{%
@@ -99,12 +109,14 @@ Fix an $ \ \mathlarger{\epsilon_1 = \frac{\epsilon}{2}} \ $ such that with proba
 
 
 \noindent
-Fix a $\delta > 0$ and choose some $\gamma_1 \leq \frac{\delta}{2}$ \ such that with probability $1- \gamma_1 \ \geq \ 1 - \frac{\delta}{2} \ $ $\left(\right.$i.e., with probability at least $\left.  1 - \frac{\delta}{2}\right)$, the $k$ iterations of algorithm $\mathcal{A}$ will return at least one model with a generalization error within $\frac{\epsilon}{2}$  of $ \ \mathlarger{\inf_{f \in \mathcal{F}}\text{err}(f)}$. Henceforth, such a model will be referred to as a ``good" model. The number of iterations of $\mathcal{A}$ should be sufficiently large so that the probability of at least one ``good" model being returned is at least $1 - \frac{\delta}{2}$. To determine a sufficient $k$, let $X$ be a r.v. that denotes the number of ``good" models that are returned in the $k$ iterations of $\mathcal{A}$. Then, the probability that at least one ``good" model is returned is
+Fix a $\delta > 0$ and choose some $\gamma_1 \leq \frac{\delta}{2}$ \ such that with probability $1- \gamma_1 \ \geq \ 1 - \frac{\delta}{2} \ $ $\left(\right.$i.e., with probability at least $\left.  1 - \frac{\delta}{2}\right)$, the $k$ iterations of algorithm $\mathcal{A}$ will return at least one model with a generalization error within $\frac{\epsilon}{2}$  of $ \ \mathlarger{\inf_{f \in \mathcal{F}}\text{err}(f)}$. Henceforth, such a model will be referred to as a ``good" model, while models that don't exhibit this behavior will be referred to as ``bad". Let $\mathcal{F_{\mathcal{B}}}$ be the collection of the $k$ models returned by algorithm $\mathcal{A}$. That is, for $i \in \{1, \dots, k\}$, let $f^{\mathcal{A}}_{n_i}$ denote the model returned by $\mathcal{A}$ in the $i^{th}$ run, then $\mathcal{F_{\mathcal{B}}} = \left\lbrace f^{\mathcal{A}}_{n_1}, \dots, f^{\mathcal{A}}_{n_k} \right\rbrace$. The number of models in $\mathcal{F_{\mathcal{B}}}$ (i.e., the number of iterations of $\mathcal{A}$) should be sufficiently large so that the probability of at least one ``good" model being returned is at least $1 - \frac{\delta}{2}$. To determine a sufficient $k$, consider the following:\\\ 
+Let $E_i$ be the random variable that denotes the event that the $i^{th}$ model, $f^{\mathcal{A}}_{n_i}$, is a ``good" model. That is, let $E_i = \left\lbrace \text{err}\left( f^{\mathcal{A}}_{n_i} \right) - \inf_{f \in \mathcal{F}}\text{err}\left(f \right) \ \leq \ \frac{\epsilon}{2} \right\rbrace$. Then, the complement, $E_i^{\mathrm{c}}$, is the event that $f^{\mathcal{A}}_{n_i}$ is a ``bad" model: $E_i^{\mathrm{c}} = \left\lbrace \text{err}\left( f^{\mathcal{A}}_{n_i} \right) - \inf_{f \in \mathcal{F}}\text{err}\left(f \right) \ > \ \frac{\epsilon}{2} \right\rbrace$. From the supposition, the probability that the $i^{th}$ run of $\mathcal{A}$ returns a ``bad" model is
+$$\mathbb{P}\left( E_i^{\mathrm{c}} \right) = 1 - \mathbb{P}\left(E_i\right) = 1 - 0.55 = 0.45$$
+Then, the probability that all $k$ models returned by $\mathcal{A}$ are ``bad" is
 \begin{align*}
-P(X \geq 1) = \sum_{x = 1}^k  (1-0.55)^{k-1}(0.55) \ & = \ (0.55)\sum_{x = 1}^k  (0.45)^{k-1} \\[0.5em]
-& = \ (0.55)\sum_{x = 0}^{k-1}  (0.45)^{k} \\[0.5em]
-& = \ (0.55)\left(\frac{1 - (0.45)^k}{1 - 0.45}\right) \\[0.5em]
-& = \ 1 - (0.45)^k
+\mathbb{P}\left(\forall i \in \{1, \dots, k\} : \ f^{\mathcal{A}}_{n_i} \in \mathcal{F}_{\mathcal{B}} \text{ is ``bad"}\right) \ &= \ \mathbb{P}\left( \bigcap_{i=i}^k E_i^{\mathrm{c}} \right) \ = \ \prod_{i=1}^k \mathbb{P}\left( E_i^{\mathrm{c}} \right) = \prod_{i=1}^k 0.45 = (0.45)^k
+\intertext{Then, the probability that there is \textit{at least one} ``good" model in $\mathcal{F}_{\mathcal{B}}$ is}
+\mathbb{P}\left(\exists  i \in \{1, \dots, k\} : \ f^{\mathcal{A}}_{n_i} \in \mathcal{F}_{\mathcal{B}} \text{ is ``good"}\right) \ &= \ 1 - \mathbb{P}\left( \bigcap_{i=i}^k E_i^{\mathrm{c}} \right) \ = \ 1 - (0.45)^k 
 \end{align*}
 Therefore, we need to choose a $k$ such that
 \begin{align*}
@@ -114,22 +126,43 @@ Therefore, we need to choose a $k$ such that
 %\intertext{Since $k$ is necessarily an integer, the ceiling function is applied to the right-hand %side of the last inequality:}
 %k \ = \ \left\lceil\frac{\ln\left(\frac{2}{\delta}\right)}{\ln\left(\frac{1}{0.45}\right)}\right\rceil
 \end{align*}
-While this holds for $\forall k \ \geq \ \frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}$, it suffices to set $k \ = \ \mathlarger{\left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil}$. Indeed, $k$ is necessarily an integer, so the ceiling function should be applied to the right-hand side. %That is, the number of times that $\mathcal{B}$ calls $\mathcal{A}$ should be such that $k \ \geq \ \left\lceil\frac{\ln\left(\frac{2}{\delta}\right)}{\ln\left(\frac{1}{0.45}\right)}\right\rceil$.
+\\\
+
+%To determine a sufficient $k$, let $X_i \in \{0, 1\}$ be a r.v. that takes on denotes the number of ``good" models that are returned in the $k$ iterations of $\mathcal{A}$. Then, the probability that at least one ``good" model is returned is
+%\begin{align*}
+%P(X \geq 1) = \sum_{x = 1}^k  (1-0.55)^{k-1}(0.55) \ & = \ (0.55)\sum_{x = 1}^k  (0.45)^{k-1} \\[0.5em]
+%& = \ (0.55)\sum_{x = 0}^{k-1}  (0.45)^{k} \\[0.5em]
+%& = \ (0.55)\left(\frac{1 - (0.45)^k}{1 - 0.45}\right) \\[0.5em]
+%& = \ 1 - (0.45)^k
+%\end{align*}
+%Therefore, we need to choose a $k$ such that
+%\begin{align*}
+%& 1 - (0.45)^k \ \geq \ 1 - \frac{\delta}{2} \ \ \ \Longleftrightarrow \ \ \ (0.45)^k \ \leq \ \frac{\delta}{2}
+%\ \ \ \Longleftrightarrow \ \ \ k\ln(0.45) \ \leq \ \ln\left(\frac{\delta}{2}\right)\\[0.5em]
+%& \Longleftrightarrow \ \ \ -k\ln\left(\frac{1}{0.45}\right) \ \leq \ -\ln\left(\frac{2}{\delta}\right) \ \ \ \Longleftrightarrow \ \ \ k \ \geq \ \frac{\ln\left(\frac{2}{\delta}\right)}{\ln\left(\frac{1}{0.45}\right)}
+%%\intertext{Since $k$ is necessarily an integer, the ceiling function is applied to the right-hand %side of the last inequality:}
+%%k \ = \ \left\lceil\frac{\ln\left(\frac{2}{\delta}\right)}{\ln\left(\frac{1}{0.45}\right)}\right\rceil
+%\end{align*}
+\noindent
+%While this holds for $\forall k  \geq  \frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}$, 
+It suffices to set $k  = \left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil$. Indeed, $k$ is necessarily an integer, so the ceiling function should be applied to the right-hand side. %That is, the number of times that $\mathcal{B}$ calls $\mathcal{A}$ should be such that $k \ \geq \ \left\lceil\frac{\ln\left(\frac{2}{\delta}\right)}{\ln\left(\frac{1}{0.45}\right)}\right\rceil$.
 \\\ \\\
-Let $\mathcal{F_{\mathcal{B}}}$ be the collection of the $k$ models returned by algorithm $\mathcal{A}$. Since $\mathcal{F_{\mathcal{B}}}$ is finite, the ERM algorithm can be applied to $\mathcal{F_{\mathcal{B}}}$. Then, for a fixed confidence level $\gamma_2 \leq \frac{\delta}{2}$ and tolerance $\epsilon_2 = \frac{\epsilon}{2}$, apply the ERM algorithm over $\mathcal{F_{\mathcal{B}}}$ using a test set of sufficient size $m$. Such an $m$ should be such that\footnote{The specific inequality used here was extracted from the proof of efficient PAC learnability for finite $\mathcal{F}$, using the the ERM algorithm, provided in the Learning Theory lecture notes (slide 8).}
+%Let $\mathcal{F_{\mathcal{B}}}$ be the collection of the $k$ models returned by algorithm $\mathcal{A}$. 
+Since $\mathcal{F_{\mathcal{B}}}$ is finite, the ERM algorithm can be applied to $\mathcal{F_{\mathcal{B}}}$. Then, for a fixed confidence level $\gamma_2 \leq \frac{\delta}{2}$ and tolerance $\epsilon_2 = \frac{\epsilon}{2}$, apply the ERM algorithm over $\mathcal{F_{\mathcal{B}}}$ using a test set of size $m$. By Occam's Razor, such an $m$ should be such that\footnote{The specific inequality used here was extracted from the proof of efficient PAC learnability for finite $\mathcal{F}$, using the the ERM algorithm, provided in the Learning Theory lecture notes (slide 8).}
 $$m \ \geq \ \frac{1}{2\epsilon_2^2}\ln\left(\frac{2|\mathcal{F_{\mathcal{B}}}|}{\gamma_2}\right) \ \geq \ \frac{1}{2(\sfrac{\epsilon}{2})^2}\ln\left(\frac{2k}{\sfrac{\delta}{2}}\right) \ = \ \frac{2}{\epsilon^2}\ln\left(\frac{4k}{\delta}\right)$$ 
 \\\
 and since $m$ is necessarily a positive integer, we can set $m = \left\lceil\frac{2}{\epsilon^2}\ln\left(\sfrac{4k}{\delta}\right)\right\rceil$.  \\\
-Let $f_m^{ERM}$ be the model the ERM algorithm returns. By Occam's Razor, with probability at least $1 - \frac{\delta}{2}$, we have
+Let $f_m^{ERM}$ be the model returned by the ERM algorithm. If follows from Occam's Razor that, with probability at least $1 - \frac{\delta}{2}$, 
 \begin{equation}\label{ineq2}
-\text{err}(f_m^{ERM}) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f) \ \leq \ \epsilon_2
+\text{err}\left(f_m^{ERM}\right) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f) \ \leq \ \epsilon_2
 \end{equation}
 Now, the probability that algorithm $\mathcal{B}$ fails is equal to the probability that either algorithm $\mathcal{A}$ fails to return a ``good" model in $k$ iterations or the ERM algorithm fails to select a ``good" model from $\mathcal{F}_{\mathcal{B}}$. That is,
 \begin{align*}
-\mathbb{P}(\mathcal{B} \text{ fails}) \ &= \ \mathbb{P}\left(\left\lbrace\text{err}(f_n^{\mathcal{A}}) - \inf_{f \in \mathcal{F}}\text{err}(f)  > \epsilon_1\right\rbrace \bigcup  \left\lbrace\text{err}(f_m^{ERM}) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f)  > \epsilon_2\right\rbrace \right)\\[0.8em]
-& \leq \ \mathbb{P}\left(\text{err}(f_n^{\mathcal{A}}) - \inf_{f \in \mathcal{F}}\text{err}(f)  > \epsilon_1\right) \ + \  \mathbb{P}\left(\text{err}(f_m^{ERM}) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f)  > \epsilon_2\right)\\[0.8em]
+\mathbb{P}(\mathcal{B} \text{ fails}) \ &= \ \mathbb{P}\left(\left\lbrace \forall f^{\mathcal{A}}_{n_i} \in \mathcal{F}_{\mathcal{B}} \ : \ \text{err}\left(f^{\mathcal{A}}_{n_i}\right) - \inf_{f \in \mathcal{F}}\text{err}(f)  > \epsilon_1\right\rbrace \bigcup  \left\lbrace\text{err}\left(f_m^{ERM}\right) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f)  > \epsilon_2\right\rbrace \right)\\[0.8em]
+& \leq \ \mathbb{P}\left\lbrace \forall f^{\mathcal{A}}_{n_i} \in \mathcal{F}_{\mathcal{B}} \ : \ \text{err}\left(f^{\mathcal{A}}_{n_i}\right) - \inf_{f \in \mathcal{F}}\text{err}(f)  > \epsilon_1\right\rbrace \ + \  \mathbb{P}\left\lbrace\text{err}\left(f_m^{ERM}\right) - \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f)  > \epsilon_2\right\rbrace \\[0.8em]
 & = \ \gamma_1 \ + \ \gamma_2 \ \leq \ \frac{\delta}{2} \ + \ \frac{\delta}{2} \ = \ \delta
 \end{align*}
+where the second inquality is a result of Boole's inequality (a.k.a. subadditivity).\\\
 Then, by combining inequalities (\ref{ineq1}) and (\ref{ineq2}), we have, with probability at least $1 - \delta$,
 \begin{align*}
 \text{err}(f_m^{ERM})  \ &\leq \ \epsilon_2 + \inf_{f \in \mathcal{F_{\mathcal{B}}}}\text{err}(f)\\[0.5em]
@@ -137,19 +170,23 @@ Then, by combining inequalities (\ref{ineq1}) and (\ref{ineq2}), we have, with p
 & = \ \frac{\epsilon}{2} + \frac{\epsilon}{2} + \inf_{f \in \mathcal{F}}\text{err}(f)) \\[0.5em]
 \Longrightarrow \ \ \ \ \text{err}(f_m^{ERM}) - \inf_{f \in \mathcal{F}}\text{err}(f)) \ &\leq \ \epsilon
 \end{align*}
-where the second inquality is a result of Boole's inequality (a.k.a. subadditivity).
-\\\ \\\
-Since $f_m^{ERM}$ is an arbitrary model returned by algorithm $\mathcal{B}$, the above inequality holds for any model returned by algorithm $\mathcal{B}$, with probability at least $1 - \delta$. Note, that each run of algorithm $\mathcal{B}$ is run on $n' = kn + m$ samples. Then, denote any model returned by $\mathcal{B}$ as $f_{n'}^{\mathcal{B}}$.  Hence, for a tolerance $\epsilon > 0$, with probability at least $1-\delta$, we have
+Since $f_m^{ERM}$ is an arbitrary model returned by algorithm $\mathcal{B}$, the above inequality holds for any model returned by algorithm $\mathcal{B}$, with probability at least $1 - \delta$. Note, each run of algorithm $\mathcal{B}$ is over a draw of $n' = kn + m$ \ samples. Indeed, $k \cdot n$ samples are used for the $k$ iterations of $\mathcal{A}$ and $m$ test samples are used to identify the model in $\mathcal{F}_{\mathcal{B}}$ with the minimum empirical error. Then, denote any model returned by $\mathcal{B}$ as $f_{n'}^{\mathcal{B}}$.  Hence, for a tolerance $\epsilon > 0$, with probability at least $1-\delta$, we have
 $$\text{err}(f_{n'}^{\mathcal{B}}) - \inf_{f \in \mathcal{F}}\text{err}(f)) \ \leq \ \epsilon$$
+\joe{Revise the above paragraph. Not sure it's totally correct to say this. Go with safer language.}\\\
+
+\noindent
 Moreover, 
 \begin{align*}
 k \ &= \ \left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil \ \ \Longrightarrow \ \ k \ = \ O\left(\ln\left(\sfrac{1}{\delta}\right)\right)\\[1.5em]
 m \ &= \ \left\lceil\frac{2}{\epsilon^2}\ln\left(\sfrac{4k}{\delta}\right)\right\rceil \ \ \Longrightarrow \ \ m \ = \ O\left(\frac{1}{\epsilon^2}\ln\left(\sfrac{1}{\delta}\right)\right)
 \end{align*}
 Recall that, $n \ = \ O\left(\frac{1}{\epsilon^2}\right)$. Therefore, since \ $n' = nk + m \ \ \Longrightarrow \ \ n' \ = \ O\left(\frac{1}{\epsilon^2}\ln\left(\sfrac{1}{\delta}\right)\right)$.\\\
-Since \ $\ln\left(\sfrac{1}{\delta}\right)$ grows at a slower rate than $\sfrac{1}{\delta}$ (i.e., $\ln\left(\sfrac{1}{\delta}\right) \leq \sfrac{1}{\delta}$), then $n'$ is polynomial in $\sfrac{1}{\epsilon}$ and $\sfrac{1}{\delta}$, or equivalently
+Since \ $\ln\left(\sfrac{1}{\delta}\right)$ grows at a slower rate than $\sfrac{1}{\delta}$ (i.e., $\ln\left(\sfrac{1}{\delta}\right) \leq \sfrac{1}{\delta}$), then $n'$ is polynomial in both $\sfrac{1}{\epsilon}$ and $\sfrac{1}{\delta}$, or equivalently
 $$n' = \text{poly}\left(\frac{1}{\epsilon} \ , \ \frac{1}{\delta}\right)$$
+\joe{Possibly revise or add to the above by showing that the sample size $n'$ is bounded by a polynomial in these terms.}\\\
 
+\noindent
+Hence, $\mathcal{F}$ is \textit{efficiently} PAC-learnable.
 %\begin{align*}
 %m \ = \ \left\lceil\frac{2}{\epsilon^2}\ln\left(\sfrac{4k}{\delta}\right)\right\rceil \ &= \ \left\lceil\frac{2}{\epsilon^2}\ln\left(\frac{4\left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil}{\delta}\right)\right\rceil\\[1em]
 %& \leq \ \frac{2}{\epsilon^2}\ln\left(\frac{4\left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil}{\delta}\right)\\[1em]
@@ -167,7 +204,7 @@ $$n' = \text{poly}\left(\frac{1}{\epsilon} \ , \ \frac{1}{\delta}\right)$$
 
 \begin{enumerate}[(i)]
 
-\item
+\item $\norm{y_i - y_j}$
 
 
 \item 
