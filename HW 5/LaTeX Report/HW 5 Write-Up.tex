@@ -177,7 +177,7 @@ $$\text{err}(f_{n'}^{\mathcal{B}}) - \inf_{f \in \mathcal{F}}\text{err}(f)) \ \l
 \noindent
 Moreover, 
 \begin{align*}
-k \ &= \ \left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil \ \ \Longrightarrow \ \ k \ = \ O\left(\ln\left(\sfrac{1}{\delta}\right)\right)\\[1.5em]
+k \ &= \ \left\lceil\frac{\ln\left(\sfrac{2}{\delta}\right)}{\ln\left(\sfrac{1}{0.45}\right)}\right\rceil \ \ \ \Longrightarrow \ \ k \ = \ O\left(\ln\left(\sfrac{1}{\delta}\right)\right)\\[1.5em]
 m \ &= \ \left\lceil\frac{2}{\epsilon^2}\ln\left(\sfrac{4k}{\delta}\right)\right\rceil \ \ \Longrightarrow \ \ m \ = \ O\left(\frac{1}{\epsilon^2}\ln\left(\sfrac{1}{\delta}\right)\right)
 \end{align*}
 Recall that, $n \ = \ O\left(\frac{1}{\epsilon^2}\right)$. Therefore, since \ $n' = nk + m \ \ \Longrightarrow \ \ n' \ = \ O\left(\frac{1}{\epsilon^2}\ln\left(\sfrac{1}{\delta}\right)\right)$.\\\
@@ -204,8 +204,16 @@ Hence, $\mathcal{F}$ is \textit{efficiently} PAC-learnable.
 
 \begin{enumerate}[(i)]
 
-\item $\norm{y_i - y_j}$
-
+\item The derivative of the objective function is as follows
+\begin{align*}
+\frac{\partial}{\partial y_i}\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right)^2 \ &= \ \sum_{i, j}\frac{\partial}{\partial y_i}\left[\left(\norm{y_i - y_j} - \pi_{ij}\right)^2\right]\\[0.5em]
+&= \ \sum_{i, j}2\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{\partial}{\partial y_i}\left(\norm{y_i - y_j} - \pi_{ij}\right)\\[0.5em]
+&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{\partial}{\partial y_i}\left(\sqrt{({y_i}_1 - {y_j}_1)^2 + \cdots + ({y_i}_d - {y_j}_d)^2} - \pi_{ij}\right)\\[0.5em]
+&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{1}{2}\left(({y_i}_1 - {y_j}_1)^2 + \cdots + ({y_i}_d - {y_j}_d)^2\right)^{-\sfrac{1}{2}} \cdot \\[-0.7em]
+&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdot 2\left[({y_i}_1 - {y_j}_1) + \cdots + ({y_i}_d - {y_j}_d)\right] \\[0.5em]
+&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{y_i - y_j}{\norm{y_i - y_j}}\\[0.5em]
+&= \ 2\sum_{i, j}\left(1 - \frac{\pi_{ij}}{\norm{y_i - y_j}} \right) (y_i - y_j)\\[0.5em]
+\end{align*}
 
 \item 
 
