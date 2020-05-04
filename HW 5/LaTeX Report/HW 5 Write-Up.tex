@@ -87,7 +87,7 @@
 
 
 %%%%%%%%%%%%%%%% Direct Comments %%%%%%%%%%%%%%%%
-\newcommand{\joe}[1]{\textcolor{yellow}{\colorbox{blue}{\parbox{15.5cm}{\textbf{\textsc{Joe}: \ #1}}}}}
+\newcommand{\joe}[1]{\textcolor{black}{\colorbox{cyan}{\parbox{15.5cm}{\textbf{\textsc{Joe}:  #1}}}}}
 %newcommand{\joe}[1]{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -204,24 +204,26 @@ Hence, $\mathcal{F}$ is \textit{efficiently} PAC-learnable.
 
 \begin{enumerate}[(i)]
 
-\item The derivative of the objective function is as follows
+\item Fix $i = k$. The derivative of the objective function with respect to a fixed $y_i = y_k$ is as follows
+
 \begin{align*}
-\frac{\partial}{\partial y_i}\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right)^2 \ &= \ \sum_{i, j}\frac{\partial}{\partial y_i}\left[\left(\norm{y_i - y_j} - \pi_{ij}\right)^2\right]\\[0.5em]
-&= \ \sum_{i, j}2\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{\partial}{\partial y_i}\left(\norm{y_i - y_j} - \pi_{ij}\right)\\[0.5em]
-&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{\partial}{\partial y_i}\left(\sqrt{({y_i}_1 - {y_j}_1)^2 + \cdots + ({y_i}_d - {y_j}_d)^2} - \pi_{ij}\right)\\[0.5em]
-&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{1}{2}\left(({y_i}_1 - {y_j}_1)^2 + \cdots + ({y_i}_d - {y_j}_d)^2\right)^{-\sfrac{1}{2}} \cdot \\[-0.7em]
-&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdot 2\left[({y_i}_1 - {y_j}_1) + \cdots + ({y_i}_d - {y_j}_d)\right] \\[0.5em]
-&= \ 2\sum_{i, j}\left(\norm{y_i - y_j} - \pi_{ij}\right) \cdot \frac{y_i - y_j}{\norm{y_i - y_j}}\\[0.5em]
-&= \ 2\sum_{i, j}\left(1 - \frac{\pi_{ij}}{\norm{y_i - y_j}} \right) (y_i - y_j)\\[0.5em]
+\frac{\partial}{\partial y_k}\sum_{j=1}^n\left(\norm{y_k - y_j} - \pi_{kj}\right)^2 \ &= \ \sum_{j=1}^n\frac{\partial}{\partial y_k}\left[\left(\norm{y_k - y_j} - \pi_{kj}\right)^2\right]\\[0.5em]
+&= \ \sum_{j \neq k} 2\left(\norm{y_k - y_j} - \pi_{kj}\right) \cdot \frac{\partial}{\partial y_k}\Big[\norm{y_k - y_j} - \pi_{kj}\Big]\\[0.5em]
+%&= \ 2\sum_{i \neq j}\left(\norm{y_k - y_j} - \pi_{kj}\right) \cdot \frac{\partial}{\partial y_k}\left(\sqrt{({y_k}_1 - {y_j}_1)^2 + \cdots + ({y_k}_d - {y_j}_d)^2} - \pi_{kj}\right)\\[0.5em]
+%&= \ 2\sum_{j \neq k}\left(\norm{y_k - y_j} - \pi_{kj}\right) \cdot \frac{1}{2}\left(({y_k}_1 - {y_j}%_1)^2 + \cdots + ({y_k}_d - {y_j}_d)^2\right)^{-\sfrac{1}{2}} \cdot \\[-0.7em]
+%&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdot 2\left[({y_k}_1 - {y_j}_1) + \cdots + ({y_k}_d - {y_j}_d)\right] \\[0.5em]
+&= \ 2\sum_{j \neq k}\left(\norm{y_k - y_j} - \pi_{kj}\right) \cdot \frac{y_k - y_j}{\norm{y_k - y_j}}\\[0.5em]
+&= \ 2\sum_{j \neq k}\left(1 - \frac{\pi_{kj}}{\norm{y_k - y_j}} \right) (y_k - y_j)
 \end{align*}
 
-\item 
+
+\item To determine whether the optimization problem is convex, it suffices to evaluate the second-order conditions. 
+
+
+\item Code submitted to Courseworks.
 
 
 \item 
-
-
-\item
 
 
 \end{enumerate}
