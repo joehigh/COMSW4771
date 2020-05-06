@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  4 MAY 2020 17:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  6 MAY 2020 00:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -779,32 +779,68 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 Package: algpseudocode 
 
 Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2018/10/06 v3.3-154 Customizing captions (AR)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2018/09/12 v1.8c caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 64.
+\captionmargin=\dimen175
+\captionmargin@=\dimen176
+\captionwidth=\dimen177
+\caption@tempdima=\dimen178
+\caption@indent=\dimen179
+\caption@parindent=\dimen180
+\caption@hangindent=\dimen181
 )
-LaTeX Info: Redefining \2norm on input line 40.
- (./HW 5 Write-Up.aux)
+\c@caption@flags=\count298
+\c@ContinuedFloat=\count299
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+\c@KVtest=\count300
+\sf@farskip=\skip75
+\sf@captopadj=\dimen182
+\sf@capskip=\skip76
+\sf@nearskip=\skip77
+\c@subfigure=\count301
+\c@subfigure@save=\count302
+\c@lofdepth=\count303
+\c@subtable=\count304
+\c@subtable@save=\count305
+\c@lotdepth=\count306
+\sf@top=\skip78
+\sf@bottom=\skip79
+)
+LaTeX Info: Redefining \2norm on input line 41.
+
+(./HW 5 Write-Up.aux)
 \openout1 = `"HW 5 Write-Up.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 95.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 95.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 96.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 96.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -842,16 +878,16 @@ LaTeX Font Info:    ... okay on input line 95.
 
 (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count298
-\scratchdimen=\dimen175
+\scratchcounter=\count307
+\scratchdimen=\dimen183
 \scratchbox=\box55
-\nofMPsegments=\count299
-\nofMParguments=\count300
+\nofMPsegments=\count308
+\nofMParguments=\count309
 \everyMPshowfont=\toks32
-\MPscratchCnt=\count301
-\MPscratchDim=\dimen176
-\MPnumerator=\count302
-\makeMPintoPDFobject=\count303
+\MPscratchCnt=\count310
+\MPscratchDim=\dimen184
+\MPnumerator=\count311
+\makeMPintoPDFobject=\count312
 \everyMPtoPDFconversion=\toks33
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -871,7 +907,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box56
-Package hyperref Info: Link coloring OFF on input line 95.
+Package hyperref Info: Link coloring OFF on input line 96.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -879,69 +915,72 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count304
+\c@section@level=\count313
 )
-LaTeX Info: Redefining \ref on input line 95.
-LaTeX Info: Redefining \pageref on input line 95.
-LaTeX Info: Redefining \nameref on input line 95.
+LaTeX Info: Redefining \ref on input line 96.
+LaTeX Info: Redefining \pageref on input line 96.
+LaTeX Info: Redefining \nameref on input line 96.
 
 (./HW 5 Write-Up.out) (./HW 5 Write-Up.out)
 \@outlinefile=\write3
 \openout3 = `"HW 5 Write-Up.out"'.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 97.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Try loading font information for U+msa on input line 98.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 97.
+LaTeX Font Info:    Try loading font information for U+msb on input line 98.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 101--104
+Underfull \hbox (badness 10000) in paragraph at lines 102--105
 
  []
 
 [1
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 128--130
+Underfull \hbox (badness 10000) in paragraph at lines 129--131
 
  []
 
-LaTeX Font Info:    Calculating math sizes for size <8.4> on input line 148.
+LaTeX Font Info:    Calculating math sizes for size <8.4> on input line 149.
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <4.2> not available
-(Font)              size <5> substituted on input line 148.
+(Font)              size <5> substituted on input line 149.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--152
+Underfull \hbox (badness 10000) in paragraph at lines 147--153
 
  []
 
 
-Overfull \hbox (35.9441pt too wide) detected at line 164
+Overfull \hbox (35.9441pt too wide) detected at line 165
 []
  []
 
@@ -951,33 +990,67 @@ Make it at least 14.49998pt.
 We now make it that large for the rest of the document.
 This may cause the page layout to be inconsistent, however.
 
-[2]
-
-LaTeX Font Warning: Font shape `OT1/cmr/bx/sc' undefined
-(Font)              using `OT1/cmr/bx/n' instead on input line 175.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 174--176
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 185--187
-
- []
-
-[3] [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 232.
-pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
-been already used, duplicate ignored
+[2] [3] [4]pdfTeX warning (ext4): destination with the same identifier (name{pa
+ge.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.232 \end{document}
-                     [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 232.
+l.230 ...sfrac{5}{4} - 1} - 1)^2 = \sfrac{5}{8} $$
+                                                   [4]
+<mds.png, id=51, 536.0025pt x 533.995pt>
+File: mds.png Graphic file (type png)
+<use mds.png>
+Package pdftex.def Info: mds.png  used on input line 238.
+(pdftex.def)             Requested size: 180.67499pt x 179.99146pt.
+<../code/swiss_3d.png, id=53, 650.43pt x 433.62pt>
+File: ../code/swiss_3d.png Graphic file (type png)
+<use ../code/swiss_3d.png>
+Package pdftex.def Info: ../code/swiss_3d.png  used on input line 250.
+(pdftex.def)             Requested size: 289.07999pt x 192.7254pt.
+<../code/swiss_pca.png, id=54, 433.62pt x 289.08pt>
+File: ../code/swiss_pca.png Graphic file (type png)
+<use ../code/swiss_pca.png>
+Package pdftex.def Info: ../code/swiss_pca.png  used on input line 251.
+(pdftex.def)             Requested size: 252.94499pt x 168.63252pt.
+
+Overfull \hbox (72.26996pt too wide) in paragraph at lines 250--253
+ [][][][][][] 
+ []
+
+[5 <./mds.png> <../code/swiss_3d.png> <../code/swiss_pca.png>]
+<../code/2d_embedding.png, id=68, 433.62pt x 289.08pt>
+File: ../code/2d_embedding.png Graphic file (type png)
+<use ../code/2d_embedding.png>
+Package pdftex.def Info: ../code/2d_embedding.png  used on input line 261.
+(pdftex.def)             Requested size: 252.94499pt x 168.63252pt.
+<../code/swiss_hole_3d.png, id=69, 650.43pt x 433.62pt>
+File: ../code/swiss_hole_3d.png Graphic file (type png)
+<use ../code/swiss_hole_3d.png>
+Package pdftex.def Info: ../code/swiss_hole_3d.png  used on input line 270.
+(pdftex.def)             Requested size: 289.07999pt x 192.7254pt.
+<../code/swiss_hole_pca.png, id=70, 433.62pt x 289.08pt>
+File: ../code/swiss_hole_pca.png Graphic file (type png)
+<use ../code/swiss_hole_pca.png>
+Package pdftex.def Info: ../code/swiss_hole_pca.png  used on input line 271.
+(pdftex.def)             Requested size: 252.94499pt x 168.63252pt.
+
+Overfull \hbox (72.26996pt too wide) in paragraph at lines 270--273
+ [][][][][][] 
+ []
+
+<../code/2d_embedding_hole.png, id=71, 433.62pt x 289.08pt>
+File: ../code/2d_embedding_hole.png Graphic file (type png)
+<use ../code/2d_embedding_hole.png>
+Package pdftex.def Info: ../code/2d_embedding_hole.png  used on input line 281.
+
+(pdftex.def)             Requested size: 252.94499pt x 168.63252pt.
+[6 <../code/2d_embedding.png> <../code/swiss_hole_3d.png> <../code/swiss_hole_p
+ca.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 289.
+ [7 <../code/2d_embedding_hole.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 289.
  (./HW 5 Write-Up.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 232.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 232.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 289.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 289.
 Package rerunfilecheck Info: File `"HW 5 Write-Up".out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
@@ -985,19 +1058,16 @@ Package rerunfilecheck Info: File `"HW 5 Write-Up".out' has not changed.
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.90001pt have occurred.
 
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 232.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 289.
  ) 
 Here is how much of TeX's memory you used:
- 19361 strings out of 492616
- 335546 string characters out of 6129482
- 426132 words of memory out of 5000000
- 23069 multiletter control sequences out of 15000+600000
+ 20629 strings out of 492616
+ 358481 string characters out of 6129482
+ 450556 words of memory out of 5000000
+ 24306 multiletter control sequences out of 15000+600000
  553409 words of font info for 107 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,21n,76p,1249b,411s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,21n,78p,1249b,520s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
@@ -1015,10 +1085,10 @@ ve/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2019/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2019/te
 xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "HW 5 Write-Up.pdf" (5 pages, 184075 bytes).
+Output written on "HW 5 Write-Up.pdf" (8 pages, 939278 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 86 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 152 PDF objects out of 1000 (max. 8388607)
+ 109 compressed objects within 2 object streams
+ 26 named destinations out of 1000 (max. 500000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
