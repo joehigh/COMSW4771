@@ -22,6 +22,7 @@
 \usepackage{eqnarray}
 %\usepackage{titlesec} 
 \usepackage{bm} 
+\usepackage{bbm}
 \usepackage{hyperref}
 \usepackage{flafter}
 \usepackage{graphicx}
@@ -34,6 +35,31 @@
 \newcommand\unif{\ensuremath{\operatorname{unif}}}
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 \newcommand{\1}[1]{\mathds{1}\left[#1\right]}
+
+\DeclarePairedDelimiter{\infnorm}{\lVert}{\rVert_{\infty}}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+\newcommand{\expect}{\operatorname{\mathbb{E}}\expectarg}
+\DeclarePairedDelimiterX{\expectarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\expectpi}{\operatorname{\mathbb{E}_{\pi}}\expectpiarg}
+\DeclarePairedDelimiterX{\expectpiarg}[1]{[}{]}{%
+  \ifnum\currentgrouptype=16 \else\begingroup\fi
+  \activatebar#1
+  \ifnum\currentgrouptype=16 \else\endgroup\fi
+}
+
+\newcommand{\innermid}{\nonscript\;\delimsize\vert\nonscript\;}
+\newcommand{\activatebar}{%
+  \begingroup\lccode`\~=`\|
+  \lowercase{\endgroup\let~}\innermid 
+  \mathcode`|=\string"8000
+}
+
 
 \makeatletter
 \newcommand{\mybox}{%
@@ -52,28 +78,304 @@
 \begin{document}
 \maketitle
 
-\section*{Problem 1: Finding the value of a state under a policy}
+\section*{\large Problem 1: Finding the value of a state under a policy}
+
+\begin{proof}
+\text{}\\\ \\\
+First, using the law of total expectation and conditioning over $a \in \mathcal{A}$:
+\begin{align*} 
+v_{\pi}(s) &  = \ \expectpi{G_t  |  S_t = s } \ = \ \sum_{a} \expectpi*{  G_t   |   S_t = s, a_t = a }\cdot \underbrace{P\left(a_t = a | s_t = s\right)}_{ = \ \pi(a  |  s)} \\[0.5em]
+& = \ \sum_{a} \pi(a \ | \ s)\expectpi*{  G_t   |   S_t = s, a_t = a } \\
+\intertext{Again, using the law of total expectation, but now conditioning over $s'$:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'}\expectpi*{  G_t   |   S_t = s, a_t = a, S_{t+1} = s'} \cdot \underbrace{P\left(S_{t+1} = s' \ | \ S_t = s, a_t = a \right)}_{= \ P(s' | s, a)} \\[1em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  G_t   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Substituting in the definition of $G_t$:} 
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{\sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Pulling out the first summand, $R_{t+1}$, from the infinite series:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{R_{t+1} + \sum_{k=2}^{\infty} \gamma^{k-1}R_{t+k}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Re-indexing the infinite series and factoring out a $\gamma$ :}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  \expect*{R_{t+1} + \gamma\sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k+1}}   |   S_t = s, a_t = a, S_{t+1} = s'}\\[0.2em]
+\intertext{Using the linearity property of expectation:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  R_{t+1} + \gamma\expect*{ \sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k+1}}  |  S_t = s, a_t = a, S_{t+1} = s'}\\[1em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\expectpi*{  R_{t+1} + \gamma G_{t+1}  |  S_t = s, a_t = a, S_{t+1} = s'}\\[1em]
+\intertext{Again, using the linearity property of expectation:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\bigg[\expectpi*{  R_{t+1} |  S_t = s, a_t = a, S_{t+1} = s'}  \\[-0.5em]
+&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \ \gamma\expectpi*{G_{t+1} | S_t = s, a_t = a, S_{t+1} = s'}\bigg] \\
+\intertext{By the Markov property, $\expectpi*{G_{t+1} | S_t = s, a_t = a, S_{t+1} = s'} =  \expectpi*{G_{t+1} | S_{t+1} = s'}$. Applying this to the above:}
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\bigg[\underbrace{\expectpi*{  R_{t+1} |  S_t = s, a_t = a, S_{t+1} = s'}}_{= \ R_a(s, s')}  \ + \ \gamma\underbrace{\expectpi*{G_{t+1} | S_{t+1} = s'}}_{= \ v_{\pi}(s')}\bigg] \\[0.5em]
+& = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big] \\[0.5em]
+\end{align*}
+Hence, $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$
+\end{proof}
+%\clearpage
+%\paragraph{Alternative Proof for Problem 1.} 
+%\text{}
+%\\\ \\
+%The following proof is more brief than \textit{my} proof above, and is inspired by the Bellman equation proof provided in \textit{Reinforcement Learning: An Introduction}, by Sutton.
+%\begin{align*}
+%v_{\pi}(s) &  = \ \expectpi{G_t  |  S_t = s } \ = \ \expectpi*{  \mathbb{E}\left[ \sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k}  \right]   |   S_t = s } \\[1em]
+%& = \ \expectpi*{ \mathbb{E}\left[ R_{t+1} +  \gamma\sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k+1}  \right]  | S_t = s }\\[1em]
+%& = \ \expectpi*{R_{t+1} +  \gamma G_{t+1} | S_t = s}\\[1em] 
+%& = \ \expectpi*{R_{t+1} +  \gamma \expectpi{G_{t+1} | S_{t+1} = s'} | S_t = s}  && \text{(\emph{by law of total expectation})}\\[1em] 
+%& = \  \expectpi*{R_{t+1} +  \gamma v_{\pi}(s') | S_t = s}  \\[1em]  
+%& = \ \sum_{a} \pi(a \ | \ s) \sum_{s'} P\left(s' \ | \ s, a \right)\left[R_{a}(s, s') + \gamma v_{\pi}(s') \right] \\[1em]
+%& = \ \expectpi*{\sum_{s'} P\left(s' | s, a \right)\left[R_{t+1}  +  \gamma\sum_{k = 1}^{\infty} \gamma^{k-1}R_{t+k+1}  \right] | S_t = s  }  && \text{(\emph{by def. of expected value})}\\[1em]
+%& = \ 
+%\end{align*}
+
+\section*{\large Problem 2: Solving for a value function using linear algebra}
+
+In Problem 1 it was shown that $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$ 
+Applying the assumption that all transitions are deterministic, i.e., $P(s' \ | \ s, a) = \mathbbm{1}\{s' = next(s,a)\}$, we get $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} \mathbbm{1}\{s' = next(s,a)\}\cdot\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$ 
+That is, for each action $ a $, given the current state $s$, there is exactly one subsequent state. Thus, for each action $a$, the second summation reduces to a single term:
+\begin{align*}
+v_{\pi}(s) \ & = \ \sum_{a} \pi(a \ | \ s)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\\[0.6em]
+& = \ \sum_{a} \pi(a \ | \ s)R_a(s, s') \ + \ \gamma\sum_{a} \pi(a \ | \ s)v_{\pi}(s')\\[0.6em]
+& = \ \expectpi*{R_a(s, s') | S_t = s} \ + \ \gamma\expectpi{v_{\pi}(s') | S_t = s}\\
+\end{align*}
+Rearranging, we have
+\begin{align*}
+v_{\pi}(s) \ - \ \gamma\expectpi{v_{\pi}(s') | S_t = s} \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\Longrightarrow \ \ \ \ v_{\pi}(s) \ - \ \gamma \sum_{s'} P(s' | s)v_{\pi}(s')  \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\Longrightarrow \ \ \ \ v_{\pi}(s) \ - \ \gamma \sum_{s'} P(s' | s)v_{\pi}(s')  \ & = \ \expectpi*{R_a(s, s') | S_t = s} \\[0.6em]
+\intertext{where $P(s'|s)$ is the probability of transitioning from state $s$ to the subsequent state $s'$, and so $\sum_{s'}P(s' | s)$ is the sum of transition probabilities over all possible subsequent states.}
+\intertext{The above can be expressed as a system of linear equations, where each equation is the value function at a particular current state $s_i$. All possible subsequent states are denoted by $s_j$ (see below).}
+v_{\pi}(s_i) \ - \ \gamma \sum_{j=1}^n P(s_j | s_i)v_{\pi}(s_j)  \ & = \ \expectpi*{R_a(s, s') | S_t = s}
+\end{align*}
+In matrix form, this is
+\begin{align*}
+\begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix} \ -  \  \gamma\begin{bmatrix} p(s_1 | s_1) & \cdots & p(s_n | s_1) \\ \vdots & \ddots & \vdots \\ p(s_1 | s_n) & \cdots & p(s_n | s_n)  \end{bmatrix} \begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix} \ & = \ \begin{bmatrix} \expectpi*{R_a(s_1, s')} \\ \vdots \\ \expectpi*{R_a(s_n, s')} \end{bmatrix} 
+\end{align*}
+That is,  
+\begin{align*}
+\mathbf{v}_{\pi} \ - \ \gamma \mathbf{P} \mathbf{v}_{\pi} \ & = \ \mathbf{R}_{\pi}\\
+\Longrightarrow \ \ \ \ \ \ \left(\mathbf{I} - \gamma \mathbf{P}\right)\mathbf{v}_{\pi} \ & = \ \mathbf{R}_{\pi}
+\end{align*}
+where $\mathbf{R}_{\pi}$ denotes the vector of expected returns on the right-hand side of the expression above.
 
 
-\section*{Problem 2: Solving for a value function using linear algebra}
 
 
-\section*{Problem 3: Finding the value states ``in the real world"}
+%Now, applying this result for the current state $s_i$, for all $i$, and for each possible subsequent state $s_j$, $i, j \in \{1, \dots, n\}$, we get:
+%$$v_{\pi}(s_i) \ = \ \sum_{j=1}^n \pi(a_i \ | \ s_i)R_a(s_i, s_j) \ + \ \gamma\sum_{j=1}^n \pi(a_i \ | \ s_i)v_{\pi}(s_j)$$
+%
+%where $a_{ij}$ denotes the action that results in transitioning to state $s_j$ from state $s_i$. 
+%Putting this into matrix form:
+%$$\begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix}  = \begin{bmatrix} \pi(a_{11} | s_1) & \cdots & \pi(a_{1n} | s_1) \\ \vdots & \ddots & \vdots \\ \pi(a_{n1} | s_n) & \cdots & \pi(a_{nn} | s_n)  \end{bmatrix} \begin{bmatrix} R_1 \\ \vdots \\ R_n \end{bmatrix} \ + \ \gamma  \begin{bmatrix} \pi(a_{11} | s_1) & \cdots & \pi(a_{1n} | s_1) \\ \vdots & \ddots & \vdots \\ \pi(a_{n1} | s_n) & \cdots & \pi(a_{nn} | s_n)  \end{bmatrix} \begin{bmatrix} v_{\pi}(s_1) \\ \vdots \\ v_{\pi}(s_n) \end{bmatrix}$$
 
 
-\section*{Problem 4: Finding an optimal value function}
+\section*{\large Problem 3: Finding the value states ``in the real world"}
+
+For uniform policy $\pi$ and $\gamma = 0.9$, it can be seen that the north is favored. In particular, it appears that state A is the optimal state to be in. Note the negative values along the bottom of the grid. This is because of the increased probability of leaving the grid under this policy. 
+
+\begin{figure}[H]
+\centering
+\caption{Grid for Uniform Policy $\pi$ and $\gamma = 0.9$}
+\includegraphics[scale=0.5]{"../code/figures/p3_part1"}
+\label{fig:uniform-grid}
+\end{figure}
+
+For non-uniform policy $\pi(north|s) = 0.7$  and $0.1$, it can be seen that the north is favored here as well.  Again, it appears that state A is the optimal state to be in. Note again, the negative values along the bottom of the grid.
+
+\begin{figure}[H]
+\centering
+\caption{Grid for $\pi(north|s) = 0.7$  and $0.1$ for all other directions}
+\includegraphics[scale=0.5]{"../code/figures/p3_part2"}
+\label{fig:uniform-grid}
+\end{figure}
+
+For non-uniform policy $\pi(north|s) = \pi(south|s) = 0.4$  and $\pi(east|s) = \pi(west|s) = 0.1$, one will note that, again, the north is favored.  Again, it appears that state A is the optimal state to be in. Note again, the negative values along the bottom of the grid. 
+\begin{figure}[H]
+\centering
+\caption{Grid for $\pi(north|s) = \pi(south|s) = 0.4$  and $\pi(east|s) = \pi(west|s) = 0.1$}
+\includegraphics[scale=0.5]{"../code/figures/p3_part3"}
+\label{fig:uniform-grid}
+\end{figure}
 
 
-\section*{Problem 5: Finding the optimal policy using iterative methods}
 
 
-\section*{Problem 6: Find the optimal value function for gridworld}
 
+\section*{\large Problem 4: Finding an optimal value function}
 
-\section*{Problem 7: A model-free approach}
+\begin{enumerate}[(a)]
+%\item  From problem 1, the value function can be written as $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$
+\item
+Because a policy governs the actions taken and the associated probabilities, maximizing $v_{\pi}(s)$ for a given state $s$, over all policies $\pi$, is tantamount to choosing the action $a$ that achieves the maximum value.  Let $a^*$ denote such an action. Then, $a^* = \argmax_a\{v_{\pi}(s)\}$. Then, an optimal policy $\pi^*$, will always prescribe $a^*$. More specifically, for a given state $s$, an optimal policy will always distribute all of the weight/probability to $a^*$. Then, because $\sum_{a} \pi(a \ | \ s) = 1$, for a given $s$, we have that for an optimal policy $\pi^*$: $$\pi^*(a \ | \ s)  = \begin{cases} 1 & \text{if } a = \mathlarger{\argmax_a\{v_{\pi}(s)\}} \\ 0 & \text{otherwise} \end{cases}$$
+In other words, $\pi^*$ is deterministic. The value function for an optimal policy, $\pi^*$, is such that 
+\begin{align*}
+v_{\pi^*}(s) & =  \ \sum_{a}\pi^*(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big]\\
+& =  \ \left(\pi^*(a_1 | s) + \cdots + \pi^*(a^* | s) + \cdots + \pi^*(a_k | s)\right)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big] \\
+& = \ \left(0 + \cdots + \ 1 \ + \cdots + 0 \right)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big]\\
+& = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big]
+\end{align*}
+In $4b$ it's argued that $v_{\pi^*}(s) = v_*(s)$. The optimal value function is then
+\begin{align*}
+v_*(s) \ & = \ \max_{\pi}\{v_{\pi}(s)\} \\
+%& = \ \max_{\pi} \ \expectpi*{G_t | S_t = s} \ = \ \sum_{\ \\
+& = \ \max_{\pi} \left\lbrace \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\right\rbrace\\[1em]
+\intertext{By the recursive definition of the value function, the optimal value at a state $s$ must include the optimal value (discounted by $\gamma$) for each subsequent state, $s'$. It then follows that,}
+& = \ \max_{a} \left\lbrace \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma \max_{\pi} v_{\pi}(s') \big]\right\rbrace\\[1em]
+\intertext{From the above argument that an optimal policy will always distribute all of the weight/probability to $a^*$:}
+& = \ \max_{a} \left\lbrace \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big]\right\rbrace\\[1em]
+\end{align*}
+Therefore, $$v_*(s) \ = \ \max_{a} \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s') \big]$$
 
+\item 
+%From part (a) we know that $v_*(s) = \mathlarger{\max_{a} \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_*(s') \big]}$. Based on this definition, 
+An optimal policy can be found by recursively choosing the action that achieves the maximum value at each state $s$, and distributing all of the weight/probability to this action. That is, at each state $s$, choose the action $a^* = \argmax_{a} v_{\pi}(s)$, and set $\pi(a^*|s) = 1$ and assign $0$ to all other policies. Then at each state $s$, the value function for this optimal policy $\pi^*$ is such that \ $v_{\pi}(s) \leq v_{\pi^*}(s)$ for all policies $\pi$ and all $s \in \mathcal{S}$. However, this is also the relationship that $v_*(s)$ has with $v_{\pi}(s)$, for all policies $\pi$. Indeed, it follows from the definition of $v_*(s)$ being the optimal value function that $v_{\pi}(s) \leq v_{*}(s)$ for all policies $\pi$ and all $s \in \mathcal{S}$. Therefore, it must be the case that $v_{\pi^*}(s) = v_*(s)$. Thus, the optimal policy is indeed optimal.\\\
+
+The optimal policy $\pi^*$ is deterministic. Indeed, as discussed in part (a), it will always choose the action $a^* = \mathlarger{\argmax_{a} v_{\pi}(s)}$. Therefore, all of the probability/weight will be allocated to $a^*$ at each state, whereas all other actions will be assigned a probability of zero. This implies that the optimal policy is non-random. That is, the action it prescribes when in state $s$ is a deterministic function of $s$.
+
+\item \begin{proof}
+First, note that \ $q_{\pi}(s, a)  \ = \ \expectpi*{G_t | S_t = s , A_t = a}$. Now, starting from the definition of the value function, we have
+\begin{align*}
+v_{\pi}(s) \ & = \ \expectpi*{G_t | S_t = s} \\[0.5em]
+& = \ \sum_{a} \underbrace{\expectpi*{  G_t   |   S_t = s, A_t = a }}_{= \ q_{\pi}(s,a)}\pi(a \ | \ s) & \textit{by the law of total expectation}\\[0.5em]
+& = \ \sum_{a} \pi(a \ | \ s)q_{\pi}(s,a)
+\end{align*}
+That is, $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)q_{\pi}(s,a)$$
+
+In Problem 1, we found that $$v_{\pi}(s) \ = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]$$
+Therefore, 
+\begin{align*}
+\sum_{a} \pi(a \ | \ s)q_{\pi}(s,a) \ & = \ \sum_{a} \pi(a \ | \ s)\sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\\[1em]
+\Longrightarrow \ \ \ \ q_{\pi}(s,a) \ & = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]
+\end{align*}
+Using this form of the $q$-function, we will maximize over all policies $\pi$:
+\begin{align*}
+q_*(s,a) \ = \ \max_{\pi} q_{\pi}(s,a) \ & = \ \max_{\pi} \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{\pi}(s') \big]\\[0.5em]
+& = \ \max_{\pi} \left\lbrace \sum_{s'} P(s' \ | \ s, a)R_a(s, s') \ + \ \gamma \sum_{s'} P(s' \ | \ s, a) v_{\pi}(s') \right\rbrace \\[0.5em]
+\intertext{Since we are maximizing over $\pi$, all terms independent of $\pi$ can be moved outside of the max operator. While actions are dependent on $\pi$, the terms being moved outside of the max operator are conditioning on the action $a$. That is, $a$ is given in those terms:}
+& = \ \sum_{s'} P(s' \ | \ s, a)R_a(s, s') \ + \ \gamma \sum_{s'} P(s' \ | \ s, a) \max_{\pi} v_{\pi}(s') \\[0.5em]
+& = \ \sum_{s'} P(s' \ | \ s, a)R_a(s, s') \ + \ \gamma \sum_{s'} P(s' \ | \ s, a) v_{*}(s') \\[0.5em]
+& = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s')\big] \\[0.5em]
+\Longrightarrow \ \ \ \ q_*(s, a) \ & = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') \ + \ \gamma v_{*}(s')\big] \\[0.5em]
+\intertext{Now, substituting in the expression for $v_*$ from $4a$ into $q_*(s,a)$:}
+ q_*(s, a) \ & = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') + \gamma \max_{a'} {\color{blue} \underbrace{\color{black} \sum_{s''} P(s'' \ | \ s', a')[R_{a'}(s', s'') + \gamma v_{*}(s'')]}_{= \ q_*(s', a')}}\big]
+\intertext{where $s''$ denotes the state subsequent to $s'$. Notice that the expression in the max operator satisfies the equation for $q_*$ that was determined above. Hence, we have}
+ q_*(s, a) \ & = \ \sum_{s'} P(s' \ | \ s, a)\big[R_a(s, s') + \gamma \max_{a'}  q_*(s', a')\big]
+\end{align*}
+
+\end{proof}
+
+\end{enumerate}
+
+\section*{\large Problem 5: Finding the optimal policy using iterative methods}
+\begin{proof}
+\begin{align*}
+\infnorm{V_t(s) - V_*(s)} \ & = \ \max_{s \in \mathcal{S}} \ \lvert V_t(s) - V_*(s) \rvert \\[0.5em]
+& = \ \max_{s \in \mathcal{S}} \ \abs[\bigg]{\max_{a} \sum_{s'} P(s' | s, a)\big[R_a(s, s') \ + \  \gamma V_{t-1}(s')\big] \\[-0.9em]
+&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ - \ \max_{a} \sum_{s'} P(s' | s, a)[R_a(s, s') \ + \ \gamma V_*(s')]} \\[0.5em]
+& \leq \ \max_{s \in \mathcal{S}} \ \abs[\Bigg]{\max_{a} \left\lbrace \sum_{s'} P(s' | s, a)\big[R_a(s, s') \ + \ \gamma V_{t-1}(s')\big] \right. \\[-0.9em]
+&\quad \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \left. - \ \sum_{s'} P(s' | s, a)\big[R_a(s, s') \ + \ \gamma V_*(s')\big]\right\rbrace} \\[0.5em]
+& = \ \max_{s \in \mathcal{S}} \ \abs[\bigg]{\max_{a} \underbrace{\sum_{s'} P(s' | s, a)}_{= \ 1}\big[\gamma V_{t-1}(s')  \ - \ \gamma V_*(s')\big]} \\[1em]
+& = \ \gamma\max_{s \in \mathcal{S}} \ \abs[\big]{V_{t-1}(s') \ - \ V_*(s')} \\[0.5em]
+& \leq \ \gamma\max_{s \in \mathcal{S}} \ \abs[\big]{V_{t-1}(s)  \ - \ V_*(s)} \\[0.5em]
+& = \ \gamma\infnorm{V_{t-1}(s) - V_*(s)}
+\end{align*}
+Therefore,  $$\infnorm{V_t(s) - V_*(s)} \ \leq \ \gamma\infnorm{V_{t-1}(s) - V_*(s)}$$
+In general, using the same argument as above, it can be shown that for all $k \in \{1, 2, \dots, t-1\}$ and any $\gamma \in (0, 1)$
+$$\infnorm{V_{t-k}(s) - V_*(s)} \ \leq \ \gamma\infnorm{V_{t-k-1}(s) - V_*(s)}$$
+Then,
+\begin{align*}
+\infnorm{V_t(s) - V_*(s)} \ & \leq \ \gamma\infnorm{V_{t-1}(s) - V_*(s)}\\
+& \leq \ \gamma^2\infnorm{V_{t-2}(s) - V_*(s)}\\
+& \leq \ \gamma^3\infnorm{V_{t-3}(s) - V_*(s)}\\
+& \ \ \vdots \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \vdots \\
+& \leq \ \gamma^{t-1}\infnorm{V_{1}(s) - V_*(s)}\\
+& \leq \ \gamma^t\infnorm{V_0(s) - V_*(s)}\\
+\end{align*}
+$\Longrightarrow \ \ \ \ \infnorm{V_t(s) - V_*(s)} \ \leq \ \gamma^t\infnorm{V_0(s) - V_*(s)}$
+\end{proof}
+\noindent
+\textit{Now to show that the inequality above implies convergence.}\\\ \\\
+\noindent
+Since $\gamma \in (0, 1), \ \ \gamma^t \longrightarrow 0 \ $ as $ \ t \longrightarrow \infty$\\\ \\\
+$\Longrightarrow \ \ \ \gamma^t\infnorm{V_0(s) - V_*(s)} \longrightarrow 0 \ $ as $ \ t \longrightarrow \infty$\\\ \\\
+Then, the inequality \ $\infnorm{V_t(s) - V_*(s)} \ \leq \ \gamma^t\infnorm{V_0(s) - V_*(s)}$ \  implies that \\\ \\\
+$\infnorm{V_t(s) - V_*(s)} \longrightarrow 0 \ $ as $ \ t \longrightarrow \infty$\\\ \\\
+Therefore, the value function converges to the optimal value function as $t \longrightarrow \infty$.
+
+\section*{\large Problem 6: Find the optimal value function for gridworld}
+
+The optimal value function was computed using the value iteration approach (see below). This optimal policy in this case is conceptually sound given that the greatest reward is in A.
+\begin{figure}[H]
+\centering
+\caption{Optimal Value Grid}
+\includegraphics[scale=0.5]{"../code/figures/p3_part4"}
+\label{fig:uniform-grid}
+\end{figure}
+
+\section*{\large Problem 7: A model-free approach}
+\begin{enumerate}[i)]
+\item At every time step, the $Q$ estimate changes. In particular, it increases or decreases depending on the magnitude of the reward associated with the action taken. For larger rewards, there is a larger change in the $Q$ estimate, while for smaller rewards, there is a smaller change in the  estimate of $Q$. However, by implementing an $\epsilon$-greedy policy and for a reasonable value of $\alpha$, the changes in the $Q$ estimate between states will diminish. Indeed, if $\alpha$ is sufficiently small, your policy will learn on the most up-to-date information available. Therefore, for such an $\alpha$ and by acting $\epsilon$-greedily with respect to the $Q$ estimate, the policy will improve at every timestep. As the policy improves, your estimate of $Q$ improves, and since the change in the estimates decrease at every timestep, the $Q$-estimate will converge to the optimal state action function for large values of $t$ (Recall the result from Problem 5).
+
+\item Despite having started the homework early, I was not able to complete $7$(ii) in time. However, I am actively working on this problem, so that I don't miss out on anything. Sorry to disappoint. 
+\end{enumerate}
 
 \section*{Extra Credit}
+\begin{enumerate}[i)] 
+\item  From the definition of $G_t$, we have
+\begin{align*} 
+G_t \ & = \ \expect*{\sum_{n=1}^{\infty} \gamma^{n-1}R_{t+n}} \ = \ \expect*{R_{t+1} \ + \ \gamma\sum_{n=1}^{\infty} \gamma^{n-1}R_{t+n+1}} \\[1em]
+& = \ \expect*{R_{t+1}} \ + \ \gamma\expect*{\sum_{n=1}^{\infty} \gamma^{n-1}R_{t+n+1}}\\[1em]
+& = \ R_{t+1}  + \gamma G_{t+1}
+\end{align*}
+We also know that $V_{\pi}(S_t) = \expect*{G_t | S_t = s}$. Because, $V_{\pi}(S_t)$ is the expected value of $G_t$, conditional on a specific state,  $G_t$ can be estimated by $V_{\pi}(S_t)$ (biased estimate). Then,
+$$G_t \ \approx \ R_{t+1}  + \gamma V_{\pi}(S_{t+1})$$
+The recursive rule then becomes 
+$$V_{\pi}(S_t) \longleftarrow V_{\pi}(S_t) + \alpha[R_{t+1}  + \gamma V_{\pi}(S_{t+1}) - V_{\pi}(S_t)]$$
+At two timesteps ahead, $G_t$ can be expressed using following recursive argument:
+\begin{align*}
+G_t & = R_{t+1}  + \gamma G_{t+1}\\
+& = R_{t+1}  + \gamma(R_{t+2}  + \gamma G_{t+2})\\
+& = R_{t+1}  + \gamma R_{t+2}  + \gamma^2 G_{t+2}
+\end{align*}
+Now, since $G_{t+2}$ can be estimated by $V_{\pi}(S_{t+2})$, the $2$-steps-ahead estimate of $G_t$ is
+$$G_t \approx R_{t+1}  + \gamma R_{t+2}  + \gamma^2 V_{\pi}(S_{t+2})$$
+and so, the recursive rule for two timesteps ahead becomes
+$$V_{\pi}(S_t) \longleftarrow V_{\pi}(S_t) + \alpha[R_{t+1}  + \gamma R_{t+2}  + \gamma^2 V_{\pi}(S_{t+2})- V_{\pi}(S_t)]$$
 
+\item We can write $G_t$ in terms of the expected reward $n$-steps ahead using the same argument for two steps ahead in part (i):
+\begin{align*}
+G_t & = R_{t+1}  + \gamma G_{t+1}\\
+& = R_{t+1}  + \gamma(R_{t+2}  + \gamma G_{t+2})\\
+& = R_{t+1}  + \gamma R_{t+2}  + \gamma^2 G_{t+2}\\
+& = R_{t+1}  + \gamma R_{t+2}  + \gamma^2 (R_{t+3}  + \gamma G_{t+3})\\
+& = R_{t+1}  + \gamma R_{t+2}  + \gamma^2 R_{t+3}  + \gamma^3 G_{t+3}\\
+& \ \  \vdots \\
+& = R_{t+1}  + \gamma R_{t+2}  + \gamma^2 R_{t+3}  + \cdots + \gamma^{n-1} R_{t+n} + \gamma^n G_{t+n}\\
+& = \sum_{k=1}^{n}\gamma^{k-1} R_{t+k} + \gamma^n G_{t+n} 
+\end{align*}
+By estimating $G_{t+n}$ with $V_{\pi}(S_{t+n})$, the $n$-steps-ahead estimate of $G_t$ is 
+$$G_t \ \approx \ \sum_{k=1}^{n}\gamma^{k-1} R_{t+k} + \gamma^n V_{\pi}(S_{t+n})$$
+The recursive update rule for the $n$-steps-ahead estimate is then
+$$V_{\pi}(S_t) \longleftarrow V_{\pi}(S_t) + \alpha\left[\sum_{k=1}^{n}\gamma^{k-1} R_{t+k}  + \gamma^n V_{\pi}(S_{t+n}) - V_{\pi}(S_t)\right]$$
+
+\item Our $n$-steps-ahead estimate of $G_t$ is 
+$$G_t \ \approx \ \sum_{k=1}^{n}\gamma^{k-1} R_{t+k} + \gamma^n V_{\pi}(S_{t+n})$$
+
+The sum of discounted rewards, $R_{t+k}$,  adds noise/variance to the estimate of $G_t$ since each term is non-deterministic (or random), and because there is randomness in each transition from state-to-state since the action chosen is also random. 
+Then, because $G_t$ incurs noise from each additional transition (i.e., each additional $\gamma^kR_{t+k}$ term, $k \in \{2, ..., n\}$), the variance will increase as $n$ increases.
+
+$V_{\pi}(S_{t+n})$ introduces bias into the estimate of $G_t$ since it is an estimate of the value function, $v_{\pi}$, at time step $t+n$. However, there is a discount factor $\gamma^n$ on $V_{\pi}(S_{t+n})$ in the estimated expression for $G_t$, where $\gamma \in (0, 1)$. Then, as $n$ increases, $\gamma^nV_{\pi}(S_{t+n})$ decreases, and so the bias in the estimate decreases.
+
+\item Set $a_n = (1 - \lambda)\lambda^n$ for $0 < \lambda < 1$. Indeed, $\lambda^n$ gives less weight to the $G_t^{(n)}$ for larger values of $n$, making the $G_t^{(n)}$ worth exponentially less for larger values of $n$. The $(1 - \lambda)$ ensures that the weighted sum is a convex combination. Indeed, 
+\begin{align*}
+(1 - \lambda)\sum_{n=1}^{n}\lambda^n & = (1 - \lambda)(1 + \lambda + \lambda^2 + \cdots + \lambda^n)\\
+& = 1 - \lambda^n \longrightarrow 1 \ \text{as} \ n \longrightarrow \infty \\
+\intertext{That is,} 
+(1 - \lambda)\sum_{n=1}^{\infty}\lambda^n & = 1
+\end{align*}
+The recursive update rule is then,
+$$V_{\pi}(S_t) \longleftarrow V_{\pi}(S_t) + \alpha\left[(1 - \lambda)\sum_{n=1}^{\infty}\lambda^n G_t^{(n)}  - V_{\pi}(S_t)\right]$$
+
+\item This approach requires that all $n$ returns be determined before updating the value function estimate. Therefore, the algorithm makes updates every $n$-steps, or at the end of each episode.
+
+
+\item Because $\lambda \in (0, 1)$,  the $(1-\lambda)\lambda^n$ weights on $G_t^{(n)}$ are exponentially smaller for smaller values of $\lambda$, decreasing the impact the noise has on each $k$-steps-ahead estimate coming from the rewards and transitions/actions. Similarly, the weights are exponentially larger for larger values of $\lambda$, increasing the impact the noise has on each estimate. Therefore, the larger the value of $\lambda$, the larger the variance. On the other hand, larger values of $\lambda$ will result in smaller bias. 
+
+\end{enumerate}
 
 \end{document} 
